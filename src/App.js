@@ -10,6 +10,7 @@ const App = () => {
   const [clickedElement, setClickedElement] = useState('');
 
   let chartOptions = {
+    type: 'pie',
     legend: {
       display: false,
     },
