@@ -1,34 +1,68 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Pie } from 'react-chartjs-2';
 
 const data = {
-  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+  labels: ['MFA', 'NON-MFA'],
   datasets: [
     {
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        'rgba(255, 99, 132, 0.2)',
-        'rgba(54, 162, 235, 0.2)',
-        'rgba(255, 206, 86, 0.2)',
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(153, 102, 255, 0.2)',
-        'rgba(255, 159, 64, 0.2)',
-      ],
-      borderColor: [
-        'rgba(255, 99, 132, 1)',
-        'rgba(54, 162, 235, 1)',
-        'rgba(255, 206, 86, 1)',
-        'rgba(75, 192, 192, 1)',
-        'rgba(153, 102, 255, 1)',
-        'rgba(255, 159, 64, 1)',
-      ],
-      borderWidth: 1,
+      data: [5667, 223829],
+      backgroundColor: ['#FF6384', '#36A2EB'],
+      hoverBackgroundColor: ['#FF6384', '#36A2EB'],
     },
   ],
 };
 
 const PieChartWithEvents = () => {
+  const [clickedDataset, setClickedDataset] = useState('');
+  const [clickedElement, setClickedElement] = useState('');
+  const [clickedElements, setClickedElements] = useState('');
+
+  const getDatasetAtEvent = (dataset) => {
+    if (!dataset.length) return;
+
+    const datasetIndex = dataset[0].datasetIndex;
+    console.log(
+      'getDatasetAtEvent : ',
+      datasetIndex,
+      data.datasets[datasetIndex]
+    );
+    setClickedDataset(data.datasets[datasetIndex].label);
+  };
+
+  const getElementAtEvent = (element) => {
+    if (!element.length) return;
+
+    const { datasetIndex, index } = element[0];
+    console.log('getElementAtEvent : ', datasetIndex, index);
+    setClickedElement(
+      `${data.labels[index]} - ${data.datasets[datasetIndex].data[index]}`
+    );
+  };
+
+  const getElementsAtEvent = (elements) => {
+    if (!elements.length) return;
+    console.log('getElementsAtEvent : ', elements);
+    setClickedElements(elements.length);
+  };
+  const option = {
+    tooltips: {
+      enabled: false,
+      custom: this.showTooltip,
+    },
+  };
+  const showTooltip = (tooltip) => {
+    if (tooltip.opacity === 0) {
+      this.setState({
+        showTooltip: false,
+        tooltip: undefined,
+      });
+    } else {
+      this.setState({
+        showTooltip: true,
+        tooltip,
+      });
+    }
+  };
   return (
     <>
       <div className="header">
@@ -42,7 +76,18 @@ const PieChartWithEvents = () => {
           </a>
         </div>
       </div>
-      <Pie data={data} />
+      <Pie
+        data={data}
+        options={option}
+        getDatasetAtEvent={getDatasetAtEvent}
+        getElementAtEvent={getElementAtEvent}
+        getElementsAtEvent={getElementsAtEvent}
+      />
+      <div className="text-center">
+        <p>{clickedElement}</p>
+        <p>{clickedDataset}</p>
+        <p>{clickedElements}</p>
+      </div>
     </>
   );
 };
