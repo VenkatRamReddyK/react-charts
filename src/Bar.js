@@ -1,18 +1,51 @@
 import React, { useState } from 'react';
-import { Pie } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 
-const data = {
-  labels: ['MFA', 'NON-MFA'],
+const rand = () => Math.floor(Math.random() * 255);
+
+const genData = () => ({
+  labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
     {
-      data: [5667, 223829],
-      backgroundColor: ['#FF6384', '#36A2EB'],
-      hoverBackgroundColor: ['#FF6384', '#36A2EB'],
+      type: 'line',
+      label: 'Dataset 1',
+      borderColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
+      borderWidth: 2,
+      fill: false,
+      data: [rand(), rand(), rand(), rand(), rand(), rand()],
+    },
+    {
+      type: 'bar',
+      label: 'Dataset 2',
+      backgroundColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
+      data: [rand(), rand(), rand(), rand(), rand(), rand(), rand()],
+      borderColor: 'white',
+      borderWidth: 2,
+    },
+    {
+      type: 'bar',
+      label: 'Dataset 3',
+      backgroundColor: `rgb(${rand()}, ${rand()}, ${rand()})`,
+      data: [rand(), rand(), rand(), rand(), rand(), rand(), rand()],
     },
   ],
+});
+
+const options = {
+  scales: {
+    yAxes: [
+      {
+        ticks: {
+          beginAtZero: true,
+        },
+      },
+    ],
+  },
 };
 
-const PieChartWithEvents = () => {
+const data = genData();
+
+const ClickEvents = () => {
   const [clickedDataset, setClickedDataset] = useState('');
   const [clickedElement, setClickedElement] = useState('');
   const [clickedElements, setClickedElements] = useState('');
@@ -21,11 +54,6 @@ const PieChartWithEvents = () => {
     if (!dataset.length) return;
 
     const datasetIndex = dataset[0].datasetIndex;
-    console.log(
-      'getDatasetAtEvent : ',
-      datasetIndex,
-      data.datasets[datasetIndex]
-    );
     setClickedDataset(data.datasets[datasetIndex].label);
   };
 
@@ -33,7 +61,6 @@ const PieChartWithEvents = () => {
     if (!element.length) return;
 
     const { datasetIndex, index } = element[0];
-    console.log('getElementAtEvent : ', datasetIndex, index);
     setClickedElement(
       `${data.labels[index]} - ${data.datasets[datasetIndex].data[index]}`
     );
@@ -41,48 +68,26 @@ const PieChartWithEvents = () => {
 
   const getElementsAtEvent = (elements) => {
     if (!elements.length) return;
-    console.log('getElementsAtEvent : ', elements);
+
     setClickedElements(elements.length);
   };
-  const option = {
-    responsive: true,
-    legend: {
-      display: false,
-    },
-    tooltips: {
-      enabled: false,
-      // custom: () => <div>Hello</div>,
-    },
-  };
-  const showTooltip = (tooltip) => {
-    if (tooltip.opacity === 0) {
-      this.setState({
-        showTooltip: false,
-        tooltip: undefined,
-      });
-    } else {
-      this.setState({
-        showTooltip: true,
-        tooltip,
-      });
-    }
-  };
+
   return (
     <>
       <div className="header">
-        <h1 className="title">Pie Chart</h1>
+        <h1 className="title">Chart</h1>
         <div className="links">
           <a
             className="btn btn-gh"
-            href="https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/Pie.js"
+            href="https://github.com/reactchartjs/react-chartjs-2/blob/master/example/src/charts/ClickEvents.js"
           >
             Github Source
           </a>
         </div>
       </div>
-      <Pie
+      <Bar
         data={data}
-        options={option}
+        options={options}
         getDatasetAtEvent={getDatasetAtEvent}
         getElementAtEvent={getElementAtEvent}
         getElementsAtEvent={getElementsAtEvent}
@@ -96,4 +101,4 @@ const PieChartWithEvents = () => {
   );
 };
 
-export default PieChartWithEvents;
+export default ClickEvents;
