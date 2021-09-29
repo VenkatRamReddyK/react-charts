@@ -5,7 +5,7 @@ const data = {
   labels: ['MFA', 'NON-MFA'],
   datasets: [
     {
-      data: [5667, 223829],
+      data: [5667, 2238, 999, 828],
       backgroundColor: ['#FF6384', '#36A2EB'],
       hoverBackgroundColor: ['#FF6384', '#36A2EB'],
     },
